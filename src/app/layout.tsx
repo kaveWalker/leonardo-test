@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 
 import { Provider } from "@/components/ui/provider";
+import { AuthProvider } from "@/lib/auth-provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,7 +30,9 @@ export default function RootLayout({
     // added suppressHydrationWarning by following the docs: https://www.chakra-ui.com/docs/get-started/frameworks/next-app#setup-provider
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <Provider>{children}</Provider>
+        <Provider>
+          <AuthProvider>{children}</AuthProvider>
+        </Provider>
       </body>
     </html>
   );
