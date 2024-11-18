@@ -13,10 +13,14 @@ export const SignupForm = ({
   shouldRedirect?: boolean;
   formLegend?: string;
 }) => {
-  const { username, jobTitle, updateContext } = useContext(AuthContext);
+  const {
+    username = "",
+    jobTitle = "",
+    updateContext,
+  } = useContext(AuthContext);
 
-  const [usernameInput, setUsernameInput] = useState<string>("");
-  const [jobTitleInput, setJobTitleInput] = useState<string>("");
+  const [usernameInput, setUsernameInput] = useState<string>(username);
+  const [jobTitleInput, setJobTitleInput] = useState<string>(jobTitle);
 
   const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUsernameInput(e.target.value);
@@ -36,7 +40,13 @@ export const SignupForm = ({
   };
 
   return (
-    <Fieldset.Root size="lg" padding="30px" backgroundColor="#fff">
+    <Fieldset.Root
+      size="lg"
+      padding="30px"
+      backgroundColor="#fff"
+      maxW="60vw"
+      alignSelf="center"
+    >
       <Stack>
         <Fieldset.Legend>{formLegend}</Fieldset.Legend>
         <Fieldset.HelperText>
@@ -49,7 +59,7 @@ export const SignupForm = ({
           <Input
             name="username"
             onChange={handleUsernameChange}
-            value={usernameInput ?? username}
+            value={usernameInput || username}
           />
         </Field>
 
@@ -57,7 +67,7 @@ export const SignupForm = ({
           <Input
             name="job_title"
             onChange={handleJobTitleChange}
-            value={jobTitleInput ?? jobTitle}
+            value={jobTitleInput || jobTitle}
           />
         </Field>
       </Fieldset.Content>
