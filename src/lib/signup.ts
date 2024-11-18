@@ -1,3 +1,5 @@
+"use client";
+
 export const keyPrefix = 'leonardo-test:';
 export const usernameKey = `${keyPrefix}username`;
 export const jobTitleKey = `${keyPrefix}jobTitle`;

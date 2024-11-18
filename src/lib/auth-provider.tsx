@@ -1,12 +1,26 @@
 "use client";
 
-import React, { createContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { Spinner, Stack } from "@chakra-ui/react";
+import { NavBar } from "@/components/ui/nav-bar";
+
 import { getUser } from "./signup";
-import { Spinner } from "@chakra-ui/react";
 
-export const AuthContext = createContext({ username: "", jobTitle: "" });
+interface AuthContext {
+  username?: string;
+  jobTitle?: string;
+  updateContext?: (newState: { username: string; jobTitle: string }) => void;
+}
+
+export const AuthContext = createContext<AuthContext>({});
 
 export const AuthProvider = ({
   children,
@@ -19,18 +33,27 @@ export const AuthProvider = ({
   const [username, setUsername] = useState("");
   const [jobTitle, setJobTitle] = useState("");
 
+  const updateContext = ({
+    username,
+    jobTitle,
+  }: {
+    username: string;
+    jobTitle: string;
+  }) => {
+    setUsername(username);
+    setJobTitle(jobTitle);
+  };
+
   useEffect(() => {
     const { username, jobTitle } = getUser();
 
     if (username && jobTitle) {
-      setIsLoading(false);
       setUsername(username);
       setJobTitle(jobTitle);
-      router.push("/information");
     } else {
-      setIsLoading(false);
       router.push("/");
     }
+    setIsLoading(false);
   }, []);
 
   if (isLoading) {
@@ -38,8 +61,13 @@ export const AuthProvider = ({
   }
 
   return (
-    <AuthContext.Provider value={{ username, jobTitle }}>
-      {children}
+    <AuthContext.Provider value={{ username, jobTitle, updateContext }}>
+      <Stack>
+        {username && jobTitle && (
+          <NavBar username={username} jobTitle={jobTitle} />
+        )}
+        <>{children}</>
+      </Stack>
     </AuthContext.Provider>
   );
 };
