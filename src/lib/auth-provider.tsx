@@ -1,15 +1,9 @@
 "use client";
 
-import React, {
-  createContext,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 import { usePathname, useRouter } from "next/navigation";
-import { Spinner, Stack } from "@chakra-ui/react";
+import { AbsoluteCenter, Spinner, Stack } from "@chakra-ui/react";
 import { NavBar } from "@/components/ui/nav-bar";
 
 import { getUser } from "./signup";
@@ -61,7 +55,11 @@ export const AuthProvider = ({
   }, []);
 
   if (isLoading) {
-    return <Spinner size="md" />;
+    return (
+      <AbsoluteCenter>
+        <Spinner size="md" />
+      </AbsoluteCenter>
+    );
   }
 
   return (
