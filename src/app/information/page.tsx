@@ -27,25 +27,19 @@ import {
 
 import { DetailModal } from "./detail-modal";
 import { AuthContext } from "@/lib/auth-provider";
-import { useRouter } from "next/navigation";
 
 export default function Information() {
   const { username, jobTitle } = useContext(AuthContext);
-  const router = useRouter();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [openModal, setOpenModal] = useState(false);
-  const [selectedCharId, setSelectedCharId] = useState();
+  const [selectedCharId, setSelectedCharId] = useState<string>();
 
   const { data, loading } = useQuery(GET_CHARACTERS, {
     skip: !username || !jobTitle,
     variables: { page: currentPage },
     fetchPolicy: "cache-and-network",
   });
-
-  if (!username || !jobTitle) {
-    router.push("/");
-  }
 
   const onPageChange = (details: { page: number; pageSize: number }) => {
     setCurrentPage(details.page);
@@ -74,26 +68,33 @@ export default function Information() {
                   <SkeletonText noOfLines={2} width="260px" />
                 </Stack>
               ))
-            : data?.characters?.results?.map((char: any) => (
-                <Card.Root key={char.id} maxW="sm" overflow="hidden">
-                  <Image src={char.image} alt={char.name} />
-                  <Card.Body gap="2">
-                    <Card.Title mt="2">{char.name}</Card.Title>
-                    <Card.Description>Status: {char.status}</Card.Description>
-                  </Card.Body>
-                  <Card.Footer justifyContent="flex-end">
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setSelectedCharId(char.id);
-                        setOpenModal(true);
-                      }}
-                    >
-                      View
-                    </Button>
-                  </Card.Footer>
-                </Card.Root>
-              ))}
+            : data?.characters?.results?.map(
+                (char: {
+                  id: string;
+                  name: string;
+                  status: string;
+                  image: string;
+                }) => (
+                  <Card.Root key={char.id} maxW="sm" overflow="hidden">
+                    <Image src={char.image} alt={char.name} />
+                    <Card.Body gap="2">
+                      <Card.Title mt="2">{char.name}</Card.Title>
+                      <Card.Description>Status: {char.status}</Card.Description>
+                    </Card.Body>
+                    <Card.Footer justifyContent="flex-end">
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setSelectedCharId(char.id);
+                          setOpenModal(true);
+                        }}
+                      >
+                        View
+                      </Button>
+                    </Card.Footer>
+                  </Card.Root>
+                )
+              )}
         </Grid>
         {!loading ? (
           <Center>
