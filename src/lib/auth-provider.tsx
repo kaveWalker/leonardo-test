@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Spinner, Stack } from "@chakra-ui/react";
 import { NavBar } from "@/components/ui/nav-bar";
 
@@ -28,6 +28,7 @@ export const AuthProvider = ({
   children: React.ReactNode;
 }>) => {
   const router = useRouter();
+  const pathname = usePathname();
 
   const [isLoading, setIsLoading] = useState(true);
   const [username, setUsername] = useState("");
@@ -50,6 +51,9 @@ export const AuthProvider = ({
     if (username && jobTitle) {
       setUsername(username);
       setJobTitle(jobTitle);
+      if (pathname === "/") {
+        router.push("/information");
+      }
     } else {
       router.push("/");
     }

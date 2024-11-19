@@ -9,16 +9,21 @@ export const NavBar = ({ username, jobTitle }: NavBarProps) => {
   return (
     <HStack
       as="nav"
-      justifyContent="flex-end"
+      justifyContent="space-between"
       bg="#269ca5"
-      paddingEnd="12px"
-      minH="40px"
+      paddingX="24px"
+      minH="42px"
     >
-      Click to edit:
-      <Link href="/update-user" variant="underline" colorPalette="yellow">
-        <Text color="#fff">{username}</Text>
-        <Text color="#fff">{jobTitle}</Text>
+      <Link href="/" color="#fff">
+        Home
       </Link>
+      <HStack>
+        <Text>Click to edit:</Text>
+        <Link href="/update-user" variant="underline" colorPalette="yellow">
+          <Text color="#fff">{username}</Text>
+          <Text color="#fff">{jobTitle}</Text>
+        </Link>
+      </HStack>
     </HStack>
   );
 };
