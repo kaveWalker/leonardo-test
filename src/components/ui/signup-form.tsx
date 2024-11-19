@@ -1,10 +1,14 @@
-import { ChangeEvent, useContext, useState } from "react";
+import { FormEvent, useContext } from "react";
 
-import { Fieldset, Stack, Input, Button } from "@chakra-ui/react";
+import { Fieldset, Stack, Input, Button, Center } from "@chakra-ui/react";
 import { Field } from "./field";
 import { signup } from "@/lib/signup";
 import { redirect } from "next/navigation";
+
 import { AuthContext } from "@/lib/auth-provider";
+
+const usernameField = "username";
+const jobTitleField = "job_title";
 
 export const SignupForm = ({
   shouldRedirect = false,
@@ -14,25 +18,23 @@ export const SignupForm = ({
   formLegend?: string;
 }) => {
   const {
-    username = "",
-    jobTitle = "",
+    username: usernameState = "",
+    jobTitle: jobTitleState = "",
     updateContext,
   } = useContext(AuthContext);
 
-  const [usernameInput, setUsernameInput] = useState<string>(username);
-  const [jobTitleInput, setJobTitleInput] = useState<string>(jobTitle);
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-  const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setUsernameInput(e.target.value);
-  };
+    const formData = new FormData(event.currentTarget);
 
-  const handleJobTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setJobTitleInput(e.target.value);
-  };
+    const username = formData.get(usernameField)?.toString();
+    const jobTitle = formData.get(jobTitleField)?.toString();
 
-  const handleSubmit = () => {
-    signup({ username: usernameInput, jobTitle: jobTitleInput });
-    updateContext?.({ username: usernameInput, jobTitle: jobTitleInput });
+    if (username?.length && jobTitle?.length) {
+      signup({ username, jobTitle });
+      updateContext?.({ username, jobTitle });
+    }
 
     if (shouldRedirect) {
       redirect("/information");
@@ -40,41 +42,37 @@ export const SignupForm = ({
   };
 
   return (
-    <Fieldset.Root
-      size="lg"
-      padding="30px"
-      backgroundColor="#fff"
-      maxW="60vw"
-      alignSelf="center"
-    >
-      <Stack>
-        <Fieldset.Legend>{formLegend}</Fieldset.Legend>
-        <Fieldset.HelperText>
-          Please provide your details below.
-        </Fieldset.HelperText>
-      </Stack>
+    <form onSubmit={handleSubmit}>
+      <Center>
+        <Fieldset.Root
+          size="lg"
+          padding="30px"
+          backgroundColor="#fff"
+          maxW="60vw"
+          alignSelf="center"
+        >
+          <Stack>
+            <Fieldset.Legend>{formLegend}</Fieldset.Legend>
+            <Fieldset.HelperText>
+              Please provide your details below.
+            </Fieldset.HelperText>
+          </Stack>
 
-      <Fieldset.Content flexDirection="row">
-        <Field label="Username">
-          <Input
-            name="username"
-            onChange={handleUsernameChange}
-            value={usernameInput || username}
-          />
-        </Field>
+          <Fieldset.Content flexDirection="row">
+            <Field label="Username" required>
+              <Input name={usernameField} defaultValue={usernameState} />
+            </Field>
 
-        <Field label="Job title">
-          <Input
-            name="job_title"
-            onChange={handleJobTitleChange}
-            value={jobTitleInput || jobTitle}
-          />
-        </Field>
-      </Fieldset.Content>
+            <Field label="Job title" required>
+              <Input name={jobTitleField} defaultValue={jobTitleState} />
+            </Field>
+          </Fieldset.Content>
 
-      <Button type="submit" alignSelf="flex-start" onClick={handleSubmit}>
-        Save
-      </Button>
-    </Fieldset.Root>
+          <Button type="submit" alignSelf="flex-start">
+            Save
+          </Button>
+        </Fieldset.Root>
+      </Center>
+    </form>
   );
 };

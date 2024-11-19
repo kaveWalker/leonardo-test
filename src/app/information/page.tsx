@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useQuery } from "@apollo/client";
 
 import {
@@ -26,16 +26,26 @@ import {
 } from "@/components/ui/pagination";
 
 import { DetailModal } from "./detail-modal";
+import { AuthContext } from "@/lib/auth-provider";
+import { useRouter } from "next/navigation";
 
 export default function Information() {
+  const { username, jobTitle } = useContext(AuthContext);
+  const router = useRouter();
+
   const [currentPage, setCurrentPage] = useState(1);
   const [openModal, setOpenModal] = useState(false);
   const [selectedCharId, setSelectedCharId] = useState();
 
   const { data, loading } = useQuery(GET_CHARACTERS, {
+    skip: !username || !jobTitle,
     variables: { page: currentPage },
     fetchPolicy: "cache-and-network",
   });
+
+  if (!username || !jobTitle) {
+    router.push("/");
+  }
 
   const onPageChange = (details: { page: number; pageSize: number }) => {
     setCurrentPage(details.page);

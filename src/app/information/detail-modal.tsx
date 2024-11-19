@@ -1,6 +1,4 @@
-import { Badge, HStack, Textarea, VStack } from "@chakra-ui/react";
-import { Avatar } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { VStack } from "@chakra-ui/react";
 import { DataListItem, DataListRoot } from "@/components/ui/data-list";
 import {
   DialogBody,
@@ -9,7 +7,6 @@ import {
   DialogHeader,
   DialogRoot,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { useQuery } from "@apollo/client";
 import { GET_CHARACTER_BY_ID } from "@/lib/gql-queries";
