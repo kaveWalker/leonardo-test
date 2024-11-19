@@ -20,8 +20,8 @@ query GetCharacters($page: Int!) {
 `
 
 export const GET_CHARACTER_BY_ID = gql`
-query GetCharacterById($id: String!) {
-  character (id: $id) {
+query GetCharacterById($id: ID!) {
+  character(id: $id) {
     name
     status
     species

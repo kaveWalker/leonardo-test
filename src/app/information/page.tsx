@@ -25,8 +25,13 @@ import {
   PaginationRoot,
 } from "@/components/ui/pagination";
 
+import { DetailModal } from "./detail-modal";
+
 export default function Information() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedCharId, setSelectedCharId] = useState();
+
   const { data, loading } = useQuery(GET_CHARACTERS, {
     variables: { page: currentPage },
     fetchPolicy: "cache-and-network",
@@ -34,6 +39,10 @@ export default function Information() {
 
   const onPageChange = (details: { page: number; pageSize: number }) => {
     setCurrentPage(details.page);
+  };
+
+  const modalOpenChange = (open: boolean) => {
+    setOpenModal(open);
   };
 
   return (
@@ -62,7 +71,15 @@ export default function Information() {
                     <Card.Description>Status: {char.status}</Card.Description>
                   </Card.Body>
                   <Card.Footer justifyContent="flex-end">
-                    <Button variant="outline">View</Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setSelectedCharId(char.id);
+                        setOpenModal(true);
+                      }}
+                    >
+                      View
+                    </Button>
                   </Card.Footer>
                 </Card.Root>
               ))}
@@ -84,6 +101,11 @@ export default function Information() {
           </Center>
         ) : null}
       </Stack>
+      <DetailModal
+        open={openModal}
+        charId={selectedCharId}
+        setModalOpen={modalOpenChange}
+      />
     </Container>
   );
 }
