@@ -13,6 +13,7 @@ query GetCharacters($page: Int!) {
       id
       name
       image
+      status
     }
   }
 }
