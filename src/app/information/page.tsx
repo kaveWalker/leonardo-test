@@ -16,7 +16,7 @@ import { useQuery } from "@apollo/client";
 
 import { GET_CHARACTERS } from "@/lib/gql-queries";
 
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton, SkeletonText } from "@/components/ui/skeleton";
 
 import { DataListItem, DataListRoot } from "@/components/ui/data-list";
 
@@ -38,43 +38,49 @@ export default function Information() {
     setCurrentPage(details.page);
   };
 
-  if (loading) {
-    return <Skeleton />;
-  }
-
   return (
     <Container>
-      <Stack rowGap="20px">
+      <Stack rowGap="20px" paddingBottom="24px">
         <Center>
           <Heading size="3xl">Information</Heading>
         </Center>
-
         <Grid
           gridTemplateColumns="repeat(auto-fit, minmax(240px, 1fr))"
           gap="24px"
         >
-          {data?.characters?.results?.map((char: any) => (
-            <Stack key={char.id} borderWidth="1px" borderRadius="5px">
-              <Image src={char.image} alt={char.name} />
-              <DataListRoot orientation="horizontal" padding="12px">
-                <DataListItem label="Name:" value={char.name} />
-                <DataListItem label="Status:" value={char.status} />
-              </DataListRoot>
-            </Stack>
-          ))}
+          {loading
+            ? Array.from({ length: 10 }).map((_, index) => (
+                <Stack key={index}>
+                  <Skeleton height="240px" width="240px" />
+                  <SkeletonText noOfLines={2} width="240px" />
+                </Stack>
+              ))
+            : data?.characters?.results?.map((char: any) => (
+                <Stack key={char.id} borderWidth="1px" borderRadius="5px">
+                  <Image src={char.image} alt={char.name} />
+                  <DataListRoot orientation="horizontal" padding="12px">
+                    <DataListItem label="Name:" value={char.name} />
+                    <DataListItem label="Status:" value={char.status} />
+                  </DataListRoot>
+                </Stack>
+              ))}
         </Grid>
-        <PaginationRoot
-          count={data.characters.info.count}
-          pageSize={20}
-          page={currentPage}
-          onPageChange={onPageChange}
-        >
-          <HStack>
-            <PaginationPrevTrigger />
-            <PaginationItems />
-            <PaginationNextTrigger />
-          </HStack>
-        </PaginationRoot>
+        {!loading ? (
+          <Center>
+            <PaginationRoot
+              count={data?.characters?.info?.count ?? 0}
+              pageSize={20}
+              page={currentPage}
+              onPageChange={onPageChange}
+            >
+              <HStack>
+                <PaginationPrevTrigger />
+                <PaginationItems />
+                <PaginationNextTrigger />
+              </HStack>
+            </PaginationRoot>
+          </Center>
+        ) : null}
       </Stack>
     </Container>
   );
