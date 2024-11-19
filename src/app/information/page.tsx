@@ -39,6 +39,7 @@ export default function Information() {
 
   const onPageChange = (details: { page: number; pageSize: number }) => {
     setCurrentPage(details.page);
+    window.scrollTo({ top: 0 });
   };
 
   const modalOpenChange = (open: boolean) => {
