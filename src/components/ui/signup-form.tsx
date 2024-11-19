@@ -28,8 +28,8 @@ export const SignupForm = ({
 
     const formData = new FormData(event.currentTarget);
 
-    const username = formData.get(usernameField)?.toString();
-    const jobTitle = formData.get(jobTitleField)?.toString();
+    const username = formData.get(usernameField)?.toString()?.trim();
+    const jobTitle = formData.get(jobTitleField)?.toString()?.trim();
 
     if (username?.length && jobTitle?.length) {
       signup({ username, jobTitle });
