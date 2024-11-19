@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useQuery } from "@apollo/client";
 
 import {
   Center,
@@ -10,15 +11,12 @@ import {
   HStack,
   Stack,
   Image,
+  Card,
 } from "@chakra-ui/react";
 
-import { useQuery } from "@apollo/client";
-
 import { GET_CHARACTERS } from "@/lib/gql-queries";
-
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton";
-
-import { DataListItem, DataListRoot } from "@/components/ui/data-list";
+import { Button } from "@/components/ui/button";
 
 import {
   PaginationItems,
@@ -47,22 +45,26 @@ export default function Information() {
         <Grid
           gridTemplateColumns="repeat(auto-fit, minmax(240px, 1fr))"
           gap="24px"
+          rowGap="48px"
         >
           {loading
             ? Array.from({ length: 10 }).map((_, index) => (
                 <Stack key={index}>
-                  <Skeleton height="240px" width="240px" />
-                  <SkeletonText noOfLines={2} width="240px" />
+                  <Skeleton height="260px" width="260px" />
+                  <SkeletonText noOfLines={2} width="260px" />
                 </Stack>
               ))
             : data?.characters?.results?.map((char: any) => (
-                <Stack key={char.id} borderWidth="1px" borderRadius="5px">
+                <Card.Root key={char.id} maxW="sm" overflow="hidden">
                   <Image src={char.image} alt={char.name} />
-                  <DataListRoot orientation="horizontal" padding="12px">
-                    <DataListItem label="Name:" value={char.name} />
-                    <DataListItem label="Status:" value={char.status} />
-                  </DataListRoot>
-                </Stack>
+                  <Card.Body gap="2">
+                    <Card.Title mt="2">{char.name}</Card.Title>
+                    <Card.Description>Status: {char.status}</Card.Description>
+                  </Card.Body>
+                  <Card.Footer justifyContent="flex-end">
+                    <Button variant="outline">View</Button>
+                  </Card.Footer>
+                </Card.Root>
               ))}
         </Grid>
         {!loading ? (
