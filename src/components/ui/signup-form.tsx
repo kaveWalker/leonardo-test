@@ -60,11 +60,19 @@ export const SignupForm = ({
 
           <Fieldset.Content flexDirection="row">
             <Field label="Username" required>
-              <Input name={usernameField} defaultValue={usernameState} />
+              <Input
+                name={usernameField}
+                defaultValue={usernameState}
+                aria-label="username"
+              />
             </Field>
 
             <Field label="Job title" required>
-              <Input name={jobTitleField} defaultValue={jobTitleState} />
+              <Input
+                name={jobTitleField}
+                defaultValue={jobTitleState}
+                aria-label="job title"
+              />
             </Field>
           </Fieldset.Content>
 
