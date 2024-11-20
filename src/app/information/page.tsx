@@ -50,6 +50,10 @@ export default function Information() {
     setOpenModal(open);
   };
 
+  if (!username || !jobTitle) {
+    return null;
+  }
+
   return (
     <Container>
       <Stack rowGap="20px" paddingBottom="24px">
